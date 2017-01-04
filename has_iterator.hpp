@@ -18,6 +18,7 @@ namespace matsulib
 	struct has_iterator : public _detail::IteratorChecker
 	{
 	public:
-		static constexpr auto value = decltype(check <_T>(nullptr))::value;
+		using type = decltype(check <_T>(nullptr));
+		static constexpr auto value = type::value;
 	};
 }
