@@ -1,21 +1,43 @@
 ﻿#pragma once
+
+#include "has_iterator.hpp"
+#include <type_traits>
+
 namespace matsulib
 {
 	template <class> class IndexRange;
 
-	template <class _Index>
-	auto index_range(_Index begin, _Index end) -> IndexRange <_Index>
+	namespace _detail
 	{
-		return IndexRange <_Index>{begin, end};
+		namespace index_range
+		{
+			template <class _has_itr_flag> struct Range;
+			template <> struct Range <std::true_type>
+			{
+				template <class _Container>
+				static auto calc(const _Container &obj) -> int { return obj.end() - obj.begin(); }
+			};
+			template <> struct Range <std::false_type>
+			{
+				template <class _Index>
+				static auto calc(_Index range) -> _Index { return range; }
+			};
+		}
 	}
-	template <class _Index>
-	auto index_range(_Index range) -> IndexRange <_Index>
+
+	template <class _T>
+	auto index_range(const _T &begin, const _T &end)
 	{
-		return IndexRange <_Index>{range};
+		static_assert(!has_iterator<_T>::value, "index_range() : Args must not be Container !!");
+		return IndexRange <_T>{begin, end};
+	}
+	template <class _T>
+	auto index_range(const _T &range)
+	{
+		auto range_value = _detail::index_range::Range <typename has_iterator <_T>::type>::calc(range);
+		return IndexRange <int>{range_value};
 	}
 }
-
-
 
 template <class _Index>
 class matsulib::IndexRange
