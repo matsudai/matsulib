@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include <type_traits>
+
 namespace matsulib
 {
 	namespace _detail
@@ -7,12 +9,8 @@ namespace matsulib
 		struct IteratorChecker
 		{
 		protected:
-			struct True { static constexpr bool value = true; };
-			struct False { static constexpr bool value = false; };
-
-		protected:
-			template <class _T> static constexpr auto check(typename _T::iterator*)->True;
-			template <class _T> static constexpr auto check(...)->False;
+			template <class _T> static constexpr auto check(typename _T::iterator*) -> std::true_type;
+			template <class _T> static constexpr auto check(...) -> std::false_type;
 		};
 	}
 	
