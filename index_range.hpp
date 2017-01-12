@@ -15,7 +15,7 @@ namespace matsulib
 			template <> struct Range <std::true_type>
 			{
 				template <class _Container>
-				static auto calc(const _Container &obj) -> int { return obj.end() - obj.begin(); }
+				static auto calc(const _Container &obj) -> decltype(obj.end() - obj.begin()) { return obj.end() - obj.begin(); }
 			};
 			template <> struct Range <std::false_type>
 			{
