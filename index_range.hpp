@@ -35,7 +35,7 @@ namespace matsulib
 	auto index_range(const _T &range)
 	{
 		auto range_value = _detail::index_range::Range <typename has_iterator <_T>::type>::calc(range);
-		return IndexRange <int>{range_value};
+		return IndexRange <decltype(range_value)>{range_value};
 	}
 }
 
