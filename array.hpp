@@ -23,8 +23,10 @@ public:
 	using parent = std::vector <_T>;
 	using parent::parent;
 
-	auto each_with_index(std::function <void(const _T &value, size_type index)> func) const -> void;
-	auto each(std::function <void(const _T &value)> func) const -> void;
+	auto each_with_index(std::function <void(const _T &value, size_type index)> func) const -> const Array <_T> &;
+	auto each_with_index(std::function <void(const _T &value, size_type index)> func) -> Array <_T> &;
+	auto each(std::function <void(const _T &value)> func) const -> const Array <_T> &;
+	auto each(std::function <void(const _T &value)> func) -> Array <_T> &;
 
 	auto transform_with_index(std::function <_T(_T value, size_type index)> func) -> Array <_T> &;
 	auto transform(std::function <_T(_T value)> func)->Array <_T> &;
@@ -52,21 +54,37 @@ public:
 
 template <class _T>
 inline
-auto matsulib::Array <_T>::each_with_index(std::function <void(const _T &value, size_type index)> func) const -> void
+auto matsulib::Array <_T>::each_with_index(std::function <void(const _T &value, size_type index)> func) const -> const Array <_T> &
 {
 	const auto length = this->size();
 	for (size_type i = 0; i < length; ++i)
 	{
 		func(this->at(i), i);
 	}
+	return *this;
 }
 
 template <class _T>
 inline
-auto matsulib::Array <_T>::each(std::function <void(const _T &value)> func) const -> void
+auto matsulib::Array <_T>::each_with_index(std::function <void(const _T &value, size_type index)> func) -> Array <_T> &
+{
+	return const_cast <Array <_T> &>(static_cast <const Array <_T> &>(*this).each_with_index(func));
+}
+
+template <class _T>
+inline
+auto matsulib::Array <_T>::each(std::function <void(const _T &value)> func) const -> const Array <_T> &
 {
 	return each_with_index(std::bind(func, std::placeholders::_1));
 }
+
+template <class _T>
+inline
+auto matsulib::Array <_T>::each(std::function <void(const _T &value)> func) -> Array <_T> &
+{
+	return each_with_index(std::bind(func, std::placeholders::_1));
+}
+
 
 template <class _T>
 inline
