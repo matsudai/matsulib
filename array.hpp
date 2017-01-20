@@ -2,12 +2,12 @@
 
 namespace matsulib
 {
-	template <class _T, class _Allocator> class Array;
+	template <class _T> class Array;
 }
 
 #include <vector>
 
-template <class _T, class _Allocator = std::allocator <_T>>
+template <class _T>
 class matsulib::Array
 	: public std::vector <_T>
 {
