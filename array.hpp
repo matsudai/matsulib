@@ -21,6 +21,7 @@ public:
 	virtual ~Array() = default;
 
 	using parent = std::vector <_T>;
+	using size_type = typename parent::size_type;
 	using parent::parent;
 
 	auto each_with_index(std::function <void(const _T &value, size_type index)> func) const -> const Array <_T> &;
