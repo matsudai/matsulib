@@ -10,7 +10,7 @@ namespace matsulib
 
 template <class _T>
 class matsulib::Array
-	: public std::vector <_T>
+	: private std::vector <_T>
 {
 public:
 	Array() = default;
@@ -21,8 +21,45 @@ public:
 	virtual ~Array() = default;
 
 	using parent = std::vector <_T>;
-	using size_type = typename parent::size_type;
+
+	using typename parent::size_type;
+	using typename parent::value_type;
+	using typename parent::iterator;
+	using typename parent::const_iterator;
+	using typename parent::reverse_iterator;
+	using typename parent::const_reverse_iterator;
+	
 	using parent::parent;
+	using parent::operator =;
+	using parent::size;
+	using parent::resize;
+	using parent::max_size;
+	using parent::capacity;
+	using parent::empty;
+	using parent::reserve;
+	using parent::shrink_to_fit;
+	using parent::at;
+	using parent::operator [];
+	using parent::data;
+	using parent::front;
+	using parent::back;
+	using parent::assign;
+	using parent::push_back;
+	using parent::emplace_back;
+	using parent::pop_back;
+	using parent::insert;
+	using parent::emplace;
+	using parent::erase;
+	using parent::swap;
+	using parent::clear;
+	using parent::begin;
+	using parent::end;
+	using parent::rbegin;
+	using parent::rend;
+	using parent::cbegin;
+	using parent::cend;
+	using parent::crbegin;
+	using parent::crend;
 
 	auto each_with_index(std::function <void(const _T &value, size_type index)> func) const -> const Array <_T> &;
 	auto each_with_index(std::function <void(const _T &value, size_type index)> func) -> Array <_T> &;
