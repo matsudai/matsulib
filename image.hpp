@@ -89,6 +89,7 @@ namespace matsulib
       {
         img.pixels[i] = pixels[i];
       }
+      std::free(pixels);
       return std::move(img);
     }
   }
