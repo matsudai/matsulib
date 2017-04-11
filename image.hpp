@@ -177,7 +177,7 @@ namespace matsulib
       Image img/* = {w, h, static_cast <int>(comp), {}}*/;
       img.width = w;
       img.height = h;
-      img.channel = static_cast <int>(comp);
+      img.channel = static_cast <int>(comp) == 0 ? cmp : static_cast <int>(comp);
       img.pixels.resize(img.width * img.height * img.channel);
       for (decltype(img.pixels.size()) i = 0; i < img.pixels.size(); i++)
       {
