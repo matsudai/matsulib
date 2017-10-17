@@ -19,8 +19,8 @@
 //namespace matsulib::_detail
 namespace matsulib { namespace image { namespace _detail
 {
-#include "image/stb_image.h"
-#include "image/stb_image_write.h"
+#include "details/image/stb_image.h"
+#include "details/image/stb_image_write.h"
 }}}
 
 #include <vector>
