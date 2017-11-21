@@ -9,16 +9,16 @@ namespace matsulib
     struct IteratorChecker
     {
     protected:
-      template <class _T> static constexpr auto check(typename _T::iterator*) -> std::true_type;
-      template <class _T> static constexpr auto check(...) -> std::false_type;
+      template <class T> static constexpr auto check(typename T::iterator*) -> std::true_type;
+      template <class T> static constexpr auto check(...) -> std::false_type;
     };
   }
   
-  template <class _T>
+  template <class T>
   struct has_iterator : public _detail::IteratorChecker
   {
   public:
-    using type = decltype(check <_T>(nullptr));
+    using type = decltype(check <T>(nullptr));
     static constexpr auto value = type::value;
   };
 }

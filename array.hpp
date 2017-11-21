@@ -2,15 +2,15 @@
 
 namespace matsulib
 {
-  template <class _T> class Array;
+  template <class T> class Array;
 }
 
 #include <vector>
 #include <functional>
 
-template <class _T>
+template <class T>
 class matsulib::Array
-  : public std::vector <_T>
+  : public std::vector <T>
 {
 public:
   Array() = default;
@@ -20,41 +20,41 @@ public:
   Array &operator =(Array &&) = default;
   virtual ~Array() = default;
 
-  using parent = std::vector <_T>;
+  using parent = std::vector <T>;
   using parent::parent;
 
-  auto each_with_index(std::function <void(const _T &value, size_type index)> func) const -> const Array <_T> &;
-  auto each_with_index(std::function <void(const _T &value, size_type index)> func) -> Array <_T> &;
-  auto each(std::function <void(const _T &value)> func) const -> const Array <_T> &;
-  auto each(std::function <void(const _T &value)> func) -> Array <_T> &;
+  auto each_with_index(std::function <void(const T &value, size_type index)> func) const -> const Array <T> &;
+  auto each_with_index(std::function <void(const T &value, size_type index)> func) -> Array <T> &;
+  auto each(std::function <void(const T &value)> func) const -> const Array <T> &;
+  auto each(std::function <void(const T &value)> func) -> Array <T> &;
 
-  auto transform_with_index(std::function <_T(_T value, size_type index)> func) -> Array <_T> &;
-  auto transform(std::function <_T(_T value)> func)->Array <_T> &;
+  auto transform_with_index(std::function <T(T value, size_type index)> func) -> Array <T> &;
+  auto transform(std::function <T(T value)> func)->Array <T> &;
 
-  auto select_with_index(std::function <bool(const _T &value, size_type index)> func) const -> Array <_T>;
-  auto select(std::function <bool(const _T &value)> func) const -> Array <_T>;
+  auto select_with_index(std::function <bool(const T &value, size_type index)> func) const -> Array <T>;
+  auto select(std::function <bool(const T &value)> func) const -> Array <T>;
 
-  template <class _DistType>
-  auto map_with_index(std::function <_DistType(const _T &value, size_type index)> func) const -> Array <_DistType>;
-  auto map_with_index(std::function <_T(const _T &value, size_type index)> func) const -> Array <_T>;
-  template <class _DistType>
-  auto map(std::function <_DistType(const _T &value)> func) const -> Array <_DistType>;
-  auto map(std::function <_T(const _T &value)> func) const -> Array <_T>;
+  template <class DistType>
+  auto map_with_index(std::function <DistType(const T &value, size_type index)> func) const -> Array <DistType>;
+  auto map_with_index(std::function <T(const T &value, size_type index)> func) const -> Array <T>;
+  template <class DistType>
+  auto map(std::function <DistType(const T &value)> func) const -> Array <DistType>;
+  auto map(std::function <T(const T &value)> func) const -> Array <T>;
 
-  template <class _DistType>
-  auto inject_with_index(_DistType initial_value, std::function <_DistType(_DistType accumulation, const _T &value, size_type index)> func) const -> _DistType;
-  auto inject_with_index(_T initial_value, std::function <_T(_T accumulation, const _T &value, size_type index)> func) const -> _T;
-  template <class _DistType>
-  auto inject(_DistType initial_value, std::function <_DistType(_DistType accumulation, const _T &value)> func) const ->_DistType;
-  auto inject(_T initial_value, std::function <_T(_T accumulation, const _T &value)> func) const -> _T;
-  template <class _DistType>
-  auto inject(std::function <_DistType(_DistType accumulation, const _T &value)> func) const -> _DistType;
-  auto inject(std::function <_T(_T accumulation, const _T &value)> func) const -> _T;
+  template <class DistType>
+  auto inject_with_index(DistType initial_value, std::function <DistType(DistType accumulation, const T &value, size_type index)> func) const -> DistType;
+  auto inject_with_index(T initial_value, std::function <T(T accumulation, const T &value, size_type index)> func) const -> T;
+  template <class DistType>
+  auto inject(DistType initial_value, std::function <DistType(DistType accumulation, const T &value)> func) const ->DistType;
+  auto inject(T initial_value, std::function <T(T accumulation, const T &value)> func) const -> T;
+  template <class DistType>
+  auto inject(std::function <DistType(DistType accumulation, const T &value)> func) const -> DistType;
+  auto inject(std::function <T(T accumulation, const T &value)> func) const -> T;
 };
 
-template <class _T>
+template <class T>
 inline
-auto matsulib::Array <_T>::each_with_index(std::function <void(const _T &value, size_type index)> func) const -> const Array <_T> &
+auto matsulib::Array <T>::each_with_index(std::function <void(const T &value, size_type index)> func) const -> const Array <T> &
 {
   const auto length = this->size();
   for (size_type i = 0; i < length; ++i)
@@ -64,31 +64,31 @@ auto matsulib::Array <_T>::each_with_index(std::function <void(const _T &value, 
   return *this;
 }
 
-template <class _T>
+template <class T>
 inline
-auto matsulib::Array <_T>::each_with_index(std::function <void(const _T &value, size_type index)> func) -> Array <_T> &
+auto matsulib::Array <T>::each_with_index(std::function <void(const T &value, size_type index)> func) -> Array <T> &
 {
-  return const_cast <Array <_T> &>(static_cast <const Array <_T> &>(*this).each_with_index(func));
+  return const_cast <Array <T> &>(static_cast <const Array <T> &>(*this).each_with_index(func));
 }
 
-template <class _T>
+template <class T>
 inline
-auto matsulib::Array <_T>::each(std::function <void(const _T &value)> func) const -> const Array <_T> &
-{
-  return each_with_index(std::bind(func, std::placeholders::_1));
-}
-
-template <class _T>
-inline
-auto matsulib::Array <_T>::each(std::function <void(const _T &value)> func) -> Array <_T> &
+auto matsulib::Array <T>::each(std::function <void(const T &value)> func) const -> const Array <T> &
 {
   return each_with_index(std::bind(func, std::placeholders::_1));
 }
 
-
-template <class _T>
+template <class T>
 inline
-auto matsulib::Array <_T>::transform_with_index(std::function <_T(_T value, size_type index)> func) -> Array <_T> &
+auto matsulib::Array <T>::each(std::function <void(const T &value)> func) -> Array <T> &
+{
+  return each_with_index(std::bind(func, std::placeholders::_1));
+}
+
+
+template <class T>
+inline
+auto matsulib::Array <T>::transform_with_index(std::function <T(T value, size_type index)> func) -> Array <T> &
 {
   const auto length = this->size();
   for (size_type i = 0; i < length; ++i)
@@ -98,19 +98,19 @@ auto matsulib::Array <_T>::transform_with_index(std::function <_T(_T value, size
   return *this;
 }
 
-template <class _T>
+template <class T>
 inline
-auto matsulib::Array <_T>::transform(std::function <_T(_T value)> func) -> Array <_T> &
+auto matsulib::Array <T>::transform(std::function <T(T value)> func) -> Array <T> &
 {
   return transform_with_index(std::bind(func, std::placeholders::_1));
 }
 
-template <class _T>
+template <class T>
 inline
-auto matsulib::Array <_T>::select_with_index(std::function <bool(const _T &value, size_type index)> func) const -> Array <_T>
+auto matsulib::Array <T>::select_with_index(std::function <bool(const T &value, size_type index)> func) const -> Array <T>
 {
   const auto length = this->size();
-  auto dst_array = Array <_T>{};
+  auto dst_array = Array <T>{};
   dst_array.reserve(length);
   for (size_type i = 0; i < length; ++i)
   {
@@ -121,20 +121,20 @@ auto matsulib::Array <_T>::select_with_index(std::function <bool(const _T &value
   }
   return dst_array;
 }
-template <class _T>
+template <class T>
 inline
-auto matsulib::Array <_T>::select(std::function <bool(const _T &value)> func) const -> Array <_T>
+auto matsulib::Array <T>::select(std::function <bool(const T &value)> func) const -> Array <T>
 {
   return select_with_index(std::bind(func, std::placeholders::_1));
 }
 
-template <class _T>
-template <class _DistType>
+template <class T>
+template <class DistType>
 inline
-auto matsulib::Array <_T>::map_with_index(std::function <_DistType(const _T &value, size_type index)> func) const -> Array <_DistType>
+auto matsulib::Array <T>::map_with_index(std::function <DistType(const T &value, size_type index)> func) const -> Array <DistType>
 {
   const auto length = this->size();
-  auto dst_array = Array <_DistType>{};
+  auto dst_array = Array <DistType>{};
   dst_array.resize(length);
   for (size_type i = 0; i < length; ++i)
   {
@@ -143,32 +143,32 @@ auto matsulib::Array <_T>::map_with_index(std::function <_DistType(const _T &val
   return dst_array;
 }
 
-template <class _T>
+template <class T>
 inline
-auto matsulib::Array <_T>::map_with_index(std::function <_T(const _T &value, size_type index)> func) const -> Array <_T>
+auto matsulib::Array <T>::map_with_index(std::function <T(const T &value, size_type index)> func) const -> Array <T>
 {
-  return map_with_index <_T>(func);
+  return map_with_index <T>(func);
 }
 
-template <class _T>
-template <class _DistType>
+template <class T>
+template <class DistType>
 inline
-auto matsulib::Array <_T>::map(std::function <_DistType(const _T &value)> func) const -> Array <_DistType>
+auto matsulib::Array <T>::map(std::function <DistType(const T &value)> func) const -> Array <DistType>
 {
-  return map_with_index <_DistType>(std::bind(func, std::placeholders::_1));
+  return map_with_index <DistType>(std::bind(func, std::placeholders::_1));
 }
 
-template <class _T>
+template <class T>
 inline
-auto matsulib::Array <_T>::map(std::function <_T(const _T &value)> func) const -> Array <_T>
+auto matsulib::Array <T>::map(std::function <T(const T &value)> func) const -> Array <T>
 {
   return map_with_index(std::bind(func, std::placeholders::_1));
 }
 
-template <class _T>
-template <class _DistType>
+template <class T>
+template <class DistType>
 inline
-auto matsulib::Array <_T>::inject_with_index(_DistType initial_value, std::function <_DistType(_DistType accumulation, const _T &value, size_type index)> func) const -> _DistType
+auto matsulib::Array <T>::inject_with_index(DistType initial_value, std::function <DistType(DistType accumulation, const T &value, size_type index)> func) const -> DistType
 {
   auto accumulation = std::move(initial_value);
   const auto length = this->size();
@@ -179,39 +179,39 @@ auto matsulib::Array <_T>::inject_with_index(_DistType initial_value, std::funct
   return accumulation;
 }
 
-template <class _T>
+template <class T>
 inline
-auto matsulib::Array <_T>::inject_with_index(_T initial_value, std::function <_T(_T accumulation, const _T &value, size_type index)> func) const -> _T
+auto matsulib::Array <T>::inject_with_index(T initial_value, std::function <T(T accumulation, const T &value, size_type index)> func) const -> T
 {
-  return inject_with_index <_T>(std::move(initial_value), func);
+  return inject_with_index <T>(std::move(initial_value), func);
 }
 
-template <class _T>
-template <class _DistType>
+template <class T>
+template <class DistType>
 inline
-auto matsulib::Array <_T>::inject(_DistType initial_value, std::function <_DistType(_DistType accumulation, const _T &value)> func) const -> _DistType
+auto matsulib::Array <T>::inject(DistType initial_value, std::function <DistType(DistType accumulation, const T &value)> func) const -> DistType
 {
-  return inject_with_index <_DistType>(std::move(initial_value), std::bind(func, std::placeholders::_1, std::placeholders::_2));
+  return inject_with_index <DistType>(std::move(initial_value), std::bind(func, std::placeholders::_1, std::placeholders::_2));
 }
 
-template <class _T>
+template <class T>
 inline
-auto matsulib::Array <_T>::inject(_T initial_value, std::function <_T(_T accumulation, const _T &value)> func) const -> _T
+auto matsulib::Array <T>::inject(T initial_value, std::function <T(T accumulation, const T &value)> func) const -> T
 {
   return inject_with_index(std::move(initial_value), std::bind(func, std::placeholders::_1, std::placeholders::_2));
 }
 
-template <class _T>
-template <class _DistType>
+template <class T>
+template <class DistType>
 inline
-auto matsulib::Array <_T>::inject(std::function <_DistType(_DistType accumulation, const _T &value)> func) const -> _DistType
+auto matsulib::Array <T>::inject(std::function <DistType(DistType accumulation, const T &value)> func) const -> DistType
 {
-  return inject <_DistType>({}, func);
+  return inject <DistType>({}, func);
 }
 
-template <class _T>
+template <class T>
 inline
-auto matsulib::Array <_T>::inject(std::function <_T(_T accumulation, const _T &value)> func) const -> _T
+auto matsulib::Array <T>::inject(std::function <T(T accumulation, const T &value)> func) const -> T
 {
   return inject({}, func);
 }

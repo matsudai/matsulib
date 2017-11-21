@@ -19,38 +19,38 @@ namespace matsulib
       };
       template <> struct Range <std::false_type>
       {
-        template <class _Index>
-        static auto calc(_Index range) -> _Index { return range; }
+        template <class Index>
+        static auto calc(Index range) -> Index { return range; }
       };
     }
   }
 
-  template <class _T>
-  auto index_range(const _T &begin, const _T &end)
+  template <class T>
+  auto index_range(const T &begin, const T &end)
   {
-    static_assert(!has_iterator<_T>::value, "index_range() : Args must not be Container !!");
-    return IndexRange <_T>{begin, end};
+    static_assert(!has_iterator<T>::value, "index_range() : Args must not be Container !!");
+    return IndexRange <T>{begin, end};
   }
-  template <class _T>
-  auto index_range(const _T &range)
+  template <class T>
+  auto index_range(const T &range)
   {
-    auto range_value = _detail::index_range::Range <typename has_iterator <_T>::type>::calc(range);
+    auto range_value = _detail::index_range::Range <typename has_iterator <T>::type>::calc(range);
     return IndexRange <decltype(range_value)>{range_value};
   }
 }
 
-template <class _Index>
+template <class Index>
 class matsulib::IndexRange
 {
 protected:
-  _Index _end;
-  _Index _index;
+  Index _end;
+  Index _index;
 
 public:
   // range = [begin, ..., end)
-  IndexRange(_Index begin, _Index end) : _end{ end }, _index{ begin } {}
+  IndexRange(Index begin, Index end) : _end{ end }, _index{ begin } {}
   // range = [0, ..., range)
-  explicit IndexRange(_Index range) : _end{ range }, _index { 0 } {}
+  explicit IndexRange(Index range) : _end{ range }, _index { 0 } {}
 
 public:
   IndexRange() = delete;
@@ -60,7 +60,7 @@ public:
   IndexRange &operator =(IndexRange &&) = default;
 
 public:
-  auto operator *() -> _Index { return _index; }
+  auto operator *() -> Index { return _index; }
   auto operator !=(IndexRange &) -> bool { return _index < _end; }
   auto operator ++() -> void { ++_index; }
 
