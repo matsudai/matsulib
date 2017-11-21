@@ -8,9 +8,9 @@ namespace matsulib
 {
   namespace enumerable_threading
   {
-    template <class Container, class Function>
+    template <class Values, class Function>
     auto for_each(
-      Container &&values,
+      Values &&values,
       std::size_t number_of_values,
       unsigned int number_of_thread,
       Function &&function)
