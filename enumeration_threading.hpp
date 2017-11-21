@@ -3,6 +3,7 @@
 #include <vector>
 #include <thread>
 #include <atomic>
+#include <algorithm>
 
 namespace matsulib
 {
