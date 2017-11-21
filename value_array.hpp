@@ -53,6 +53,12 @@ namespace matsulib {
     auto operator<=(const Type & compared_value) const -> ValueArray <bool> &&;
     auto operator>=(const Type & compared_value) const -> ValueArray <bool> &&;
 
+    template <class Function> auto any(Function &&function) -> bool;
+    template <class Function> auto any() -> bool;
+
+    template <class Function> auto all(Function &&function) -> bool;
+    template <class Function> auto all() -> bool;
+
   private:
     class Assigner;
 
