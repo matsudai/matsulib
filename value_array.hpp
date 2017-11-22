@@ -65,7 +65,7 @@ namespace matsulib {
   public:
     auto operator[](const ValueArray <bool> &filtered_map) -> Assigner;
 
-    operator std::vector <Type>();
+    operator std::vector <Type>() const;
 
   private:
     class Assigner
@@ -84,6 +84,7 @@ namespace matsulib {
       virtual ~Assigner() = default;
       auto operator=(ValueArray && source) -> ValueArray &;
       auto operator=(const Type & source) -> ValueArray &;
+      operator ValueArray() const;
     };
   };
 }
