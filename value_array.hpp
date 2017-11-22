@@ -19,39 +19,32 @@ namespace matsulib {
     ValueArray &operator=(ValueArray &&) noexcept = default;
     virtual ~ValueArray() = default;
 
-    auto operator+(const ValueArray & added_array) const -> ValueArray &&;
-    auto operator-(const ValueArray & added_array) const -> ValueArray &&;
-    auto operator*(const ValueArray & added_array) const -> ValueArray &&;
-    auto operator/(const ValueArray & added_array) const -> ValueArray &&;
+    auto operator+(const ValueArray & values) const -> ValueArray;
+    auto operator-(const ValueArray & values) const -> ValueArray;
+    auto operator*(const ValueArray & values) const -> ValueArray;
+    auto operator/(const ValueArray & values) const -> ValueArray;
 
-    auto operator+(const Type & added_value) const -> ValueArray &&;
-    auto operator-(const Type & added_value) const -> ValueArray &&;
-    auto operator*(const Type & added_value) const -> ValueArray &&;
-    auto operator/(const Type &added_value) const -> ValueArray &&;
+    auto operator+(const Type & value) const -> ValueArray;
+    auto operator-(const Type & value) const -> ValueArray;
+    auto operator*(const Type & value) const -> ValueArray;
+    auto operator/(const Type & value) const -> ValueArray;
 
-    auto operator+=(const ValueArray & added_array) -> ValueArray &;
-    auto operator-=(const ValueArray & added_array) -> ValueArray &;
-    auto operator*=(const ValueArray & added_array) -> ValueArray &;
-    auto operator/=(const ValueArray & added_array) -> ValueArray &;
+    auto operator+=(const ValueArray & values) -> ValueArray &;
+    auto operator-=(const ValueArray & values) -> ValueArray &;
+    auto operator*=(const ValueArray & values) -> ValueArray &;
+    auto operator/=(const ValueArray & values) -> ValueArray &;
     
-    auto operator+=(const Type & added_value) -> ValueArray &;
-    auto operator-=(const Type & added_value) -> ValueArray &;
-    auto operator*=(const Type & added_value) -> ValueArray &;
-    auto operator/=(const Type & added_value) -> ValueArray &;
-
-    auto operator<(const ValueArray & compared_array) const -> ValueArray <bool> &&;
-    auto operator>(const ValueArray & compared_array) const -> ValueArray <bool> &&;
-    auto operator==(const ValueArray & compared_array) const -> ValueArray <bool> &&;
-    auto operator!=(const ValueArray & compared_array) const -> ValueArray <bool> &&;
-    auto operator<=(const ValueArray & compared_array) const -> ValueArray <bool> &&;
-    auto operator>=(const ValueArray & compared_array) const -> ValueArray <bool> &&;
+    auto operator+=(const Type & value) -> ValueArray &;
+    auto operator-=(const Type & value) -> ValueArray &;
+    auto operator*=(const Type & value) -> ValueArray &;
+    auto operator/=(const Type & value) -> ValueArray &;
     
-    auto operator<(const Type & compared_value) const -> ValueArray <bool> &&;
-    auto operator>(const Type & compared_value) const -> ValueArray <bool> &&;
-    auto operator==(const Type & compared_value) const -> ValueArray <bool> &&;
-    auto operator!=(const Type & compared_value) const -> ValueArray <bool> &&;
-    auto operator<=(const Type & compared_value) const -> ValueArray <bool> &&;
-    auto operator>=(const Type & compared_value) const -> ValueArray <bool> &&;
+    auto operator<(const Type & compared) const -> ValueArray <bool>;
+    auto operator>(const Type & compared) const -> ValueArray <bool>;
+    auto operator==(const Type & compared) const -> ValueArray <bool>;
+    auto operator!=(const Type & compared) const -> ValueArray <bool>;
+    auto operator<=(const Type & compared) const -> ValueArray <bool>;
+    auto operator>=(const Type & compared) const -> ValueArray <bool>;
 
     template <class Function> auto any(Function &&function) -> bool;
     template <class Function> auto any() -> bool;
