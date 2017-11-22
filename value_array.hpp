@@ -14,9 +14,9 @@ namespace matsulib {
 
     ValueArray() = default;
     ValueArray(const ValueArray &) = default;
-    ValueArray(ValueArray &&) = default;
+    ValueArray(ValueArray &&) noexcept = default;
     ValueArray &operator=(const ValueArray &) = default;
-    ValueArray &operator=(ValueArray &&) = default;
+    ValueArray &operator=(ValueArray &&) noexcept = default;
     virtual ~ValueArray() = default;
 
     auto operator+(const ValueArray & added_array) const -> ValueArray &&;
