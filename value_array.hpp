@@ -63,6 +63,7 @@ namespace matsulib {
     class Assigner;
 
   public:
+    using parent::operator[];
     auto operator[](const ValueArray <bool> &filtered_map) -> Assigner;
 
     operator std::vector <Type>() const;
