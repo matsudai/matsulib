@@ -92,6 +92,9 @@ namespace matsulib {
     template <class UnaryOperation>
     auto zip_destructive(const Type & value, UnaryOperation && op) -> ValueArray &;
 
+    template <class UnaryOperation>
+    auto where(UnaryOperation && op) const -> ValueArray <bool>;
+
     auto end_of_zipped_iterator(const ValueArray &compared) -> iterator;
     auto end_of_zipped_iterator(const ValueArray &compared) const -> const_iterator;
   };
@@ -141,6 +144,15 @@ namespace matsulib {
   {
     std::transform(this->begin(), this->end(), this->begin(), std::forward <UnaryOperation>(op));
     return *this;
+  }
+
+  template <class T> template <class UnaryOperation>
+  inline auto ValueArray <T>::where(UnaryOperation && op) const -> ValueArray <bool>
+  {
+    ValueArray <bool> selector;
+    selector.resize(this->size());
+    std::transform(this->begin(), this->end(), selector.begin(), std::forward <UnaryOperation>(op));
+    return std::move(selector);
   }
 
   template <class T> auto ValueArray <T>::operator+(const ValueArray & values) const -> ValueArray
@@ -209,5 +221,30 @@ namespace matsulib {
   template <class T> auto ValueArray <T>::operator/=(const T & value) -> ValueArray &
   {
     return zip_destructive(value, [&value](auto && value) {return std::move(value / value); });
+  }
+
+  template <class T> auto ValueArray <T>::operator<(const T & compared) const -> ValueArray <bool>
+  {
+    return where([&compared](auto && value) {return std::move(value < compared); });
+  }
+  template <class T> auto ValueArray <T>::operator>(const T & compared) const -> ValueArray <bool>
+  {
+    return where([&compared](auto && value) {return std::move(value > compared); });
+  }
+  template <class T> auto ValueArray <T>::operator==(const T & compared) const -> ValueArray <bool>
+  {
+    return where([&compared](auto && value) {return std::move(value == compared); });
+  }
+  template <class T> auto ValueArray <T>::operator!=(const T & compared) const -> ValueArray <bool>
+  {
+    return where([&compared](auto && value) {return std::move(value != compared); });
+  }
+  template <class T> auto ValueArray <T>::operator<=(const T & compared) const -> ValueArray <bool>
+  {
+    return where([&compared](auto && value) {return std::move(value <= compared); });
+  }
+  template <class T> auto ValueArray <T>::operator>=(const T & compared) const -> ValueArray <bool>
+  {
+    return where([&compared](auto && value) {return std::move(value >= compared); });
   }
 }
