@@ -53,6 +53,8 @@ namespace matsulib {
     template <class Function> auto all(Function && function) const -> bool;
     auto all() const -> bool;
 
+    auto all_close(const ValueArray & values) -> bool;
+
   private:
     class Assigner;
 
@@ -282,6 +284,18 @@ namespace matsulib {
     for (auto itr = this->begin(); itr != this->end(); ++itr)
     {
       if (!static_cast <bool>(*itr)) { return false; }
+    }
+    return true;
+  }
+
+  template <class T>
+  inline auto ValueArray <T>::all_close(const ValueArray & values) -> bool
+  {
+    if (this->size() != values.size()) { return false; }
+    auto size = this->size();
+    for (std::size_t i = 0; i < size; ++i)
+    {
+      if ((*this)[i] != values[i]) { return false; }
     }
     return true;
   }
