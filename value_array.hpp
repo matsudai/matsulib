@@ -47,11 +47,11 @@ namespace matsulib {
     auto operator<=(const Type & compared) const -> ValueArray <bool>;
     auto operator>=(const Type & compared) const -> ValueArray <bool>;
 
-    template <class Function> auto any(Function &&function) -> bool;
-    template <class Function> auto any() -> bool;
+    template <class Function> auto any(Function && function) const -> bool;
+    auto any() const -> bool;
 
-    template <class Function> auto all(Function &&function) -> bool;
-    template <class Function> auto all() -> bool;
+    template <class Function> auto all(Function && function) const -> bool;
+    auto all() const -> bool;
 
   private:
     class Assigner;
@@ -246,5 +246,43 @@ namespace matsulib {
   template <class T> auto ValueArray <T>::operator>=(const T & compared) const -> ValueArray <bool>
   {
     return where([&compared](auto && value) {return std::move(value >= compared); });
+  }
+
+  template <class T> template <class Function>
+  inline auto ValueArray <T>::any(Function &&function) const -> bool
+  {
+    for (auto itr = this->begin(); itr != this->end(); ++itr)
+    {
+      if (static_cast <bool>(function(*itr))) { return true; }
+    }
+    return false;
+  }
+  template <class T>
+  inline auto ValueArray <T>::any() const -> bool
+  {
+    for (auto itr = this->begin(); itr != this->end(); ++itr)
+    {
+      if (static_cast <bool>(*itr)) { return true; }
+    }
+    return false;
+  }
+
+  template <class T> template <class Function>
+  inline auto ValueArray <T>::all(Function &&function) const -> bool
+  {
+    for (auto itr = this->begin(); itr != this->end(); ++itr)
+    {
+      if (!static_cast <bool>(function(*itr))) { return false; }
+    }
+    return true;
+  }
+  template <class T>
+  inline auto ValueArray <T>::all() const -> bool
+  {
+    for (auto itr = this->begin(); itr != this->end(); ++itr)
+    {
+      if (!static_cast <bool>(*itr)) { return false; }
+    }
+    return true;
   }
 }
