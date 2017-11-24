@@ -114,47 +114,47 @@ namespace matsulib {
   template <class T>
   inline auto ValueArray <T>::end_of_zipped_iterator(const ValueArray &compared) -> iterator
   {
-    if (this->size() > compared.size())
+    if (size() > compared.size())
     {
-      return this->end() - (this->size() - compared.size());
+      return end() - (size() - compared.size());
     }
-    return this->end();
+    return end();
   }
   template <class T>
   inline auto ValueArray <T>::end_of_zipped_iterator(const ValueArray &compared) const -> const_iterator
   {
-    if (this->size() > compared.size())
+    if (size() > compared.size())
     {
-      return this->end() - (this->size() - compared.size());
+      return end() - (size() - compared.size());
     }
-    return this->end();
+    return end();
   }
 
   template <class T> template <class BinaryOperation>
   inline auto ValueArray <T>::zip(const ValueArray & values, BinaryOperation && op) const -> ValueArray
   {
     ValueArray output = *this;
-    std::transform(this->begin(), end_of_zipped_iterator(values), values.begin(), output.begin(), std::forward <BinaryOperation>(op));
+    std::transform(begin(), end_of_zipped_iterator(values), values.begin(), output.begin(), std::forward <BinaryOperation>(op));
     return std::move(output);
   }
   template <class T> template <class UnaryOperation>
   inline auto ValueArray <T>::zip(UnaryOperation &&op) const -> ValueArray
   {
     ValueArray output = *this;
-    std::transform(this->begin(), this->end(), output.begin(), std::forward <UnaryOperation>(op));
+    std::transform(begin(), end(), output.begin(), std::forward <UnaryOperation>(op));
     return std::move(output);
   }
 
   template <class T> template <class BinaryOperation>
   inline auto ValueArray <T>::zip_destructive(const ValueArray &values, BinaryOperation &&op) -> ValueArray &
   {
-    std::transform(this->begin(), end_of_zipped_iterator(values), values.begin(), this->begin(), std::forward <BinaryOperation>(op));
+    std::transform(begin(), end_of_zipped_iterator(values), values.begin(), begin(), std::forward <BinaryOperation>(op));
     return *this;
   }
   template <class T> template <class UnaryOperation>
   inline auto ValueArray <T>::zip_destructive(UnaryOperation &&op) -> ValueArray &
   {
-    std::transform(this->begin(), this->end(), this->begin(), std::forward <UnaryOperation>(op));
+    std::transform(begin(), end(), begin(), std::forward <UnaryOperation>(op));
     return *this;
   }
 
@@ -162,8 +162,8 @@ namespace matsulib {
   inline auto ValueArray <T>::where(UnaryOperation && op) const -> ValueArray <bool>
   {
     ValueArray <bool> selector;
-    selector.resize(this->size());
-    std::transform(this->begin(), this->end(), selector.begin(), std::forward <UnaryOperation>(op));
+    selector.resize(size());
+    std::transform(begin(), end(), selector.begin(), std::forward <UnaryOperation>(op));
     return std::move(selector);
   }
 
@@ -220,19 +220,19 @@ namespace matsulib {
 
   template <class T> auto ValueArray <T>::operator+=(const T & value) -> ValueArray &
   {
-    return zip_destructive([&value](auto && value) {return std::move(value + value); });
+    return zip_destructive([&value](auto && src_value) {return std::move(src_value + value); });
   }
   template <class T> auto ValueArray <T>::operator-=(const T & value) -> ValueArray &
   {
-    return zip_destructive([&value](auto && value) {return std::move(value - value); });
+    return zip_destructive([&value](auto && src_value) {return std::move(src_value - value); });
   }
   template <class T> auto ValueArray <T>::operator*=(const T & value) -> ValueArray &
   {
-    return zip_destructive([&value](auto && value) {return std::move(value * value); });
+    return zip_destructive([&value](auto && src_value) {return std::move(src_value * value); });
   }
   template <class T> auto ValueArray <T>::operator/=(const T & value) -> ValueArray &
   {
-    return zip_destructive([&value](auto && value) {return std::move(value / value); });
+    return zip_destructive([&value](auto && src_value) {return std::move(src_value / value); });
   }
 
   template <class T> auto ValueArray <T>::operator<(const T & compared) const -> ValueArray <bool>
@@ -263,7 +263,7 @@ namespace matsulib {
   template <class T> template <class Function>
   inline auto ValueArray <T>::any(Function &&function) const -> bool
   {
-    for (auto itr = this->begin(); itr != this->end(); ++itr)
+    for (auto itr = begin(); itr != end(); ++itr)
     {
       if (static_cast <bool>(function(*itr))) { return true; }
     }
@@ -272,7 +272,7 @@ namespace matsulib {
   template <class T>
   inline auto ValueArray <T>::any() const -> bool
   {
-    for (auto itr = this->begin(); itr != this->end(); ++itr)
+    for (auto itr = begin(); itr != end(); ++itr)
     {
       if (static_cast <bool>(*itr)) { return true; }
     }
@@ -282,7 +282,7 @@ namespace matsulib {
   template <class T> template <class Function>
   inline auto ValueArray <T>::all(Function &&function) const -> bool
   {
-    for (auto itr = this->begin(); itr != this->end(); ++itr)
+    for (auto itr = begin(); itr != end(); ++itr)
     {
       if (!static_cast <bool>(function(*itr))) { return false; }
     }
@@ -291,7 +291,7 @@ namespace matsulib {
   template <class T>
   inline auto ValueArray <T>::all() const -> bool
   {
-    for (auto itr = this->begin(); itr != this->end(); ++itr)
+    for (auto itr = begin(); itr != end(); ++itr)
     {
       if (!static_cast <bool>(*itr)) { return false; }
     }
@@ -301,9 +301,9 @@ namespace matsulib {
   template <class T>
   inline auto ValueArray <T>::all_close(const ValueArray & values) -> bool
   {
-    if (this->size() != values.size()) { return false; }
-    auto size = this->size();
-    for (std::size_t i = 0; i < size; ++i)
+    if (size() != values.size()) { return false; }
+    auto loop_count = size();
+    for (std::size_t i = 0; i < loop_count; ++i)
     {
       if ((*this)[i] != values[i]) { return false; }
     }
