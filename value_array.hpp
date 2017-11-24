@@ -263,7 +263,7 @@ namespace matsulib {
   template <class T> template <class Function>
   inline auto ValueArray <T>::any(Function &&function) const -> bool
   {
-    for (auto itr = begin(); itr != end(); ++itr)
+    for (auto itr = begin(), itr_end = end(); itr != itr_end; ++itr)
     {
       if (static_cast <bool>(function(*itr))) { return true; }
     }
@@ -272,7 +272,7 @@ namespace matsulib {
   template <class T>
   inline auto ValueArray <T>::any() const -> bool
   {
-    for (auto itr = begin(); itr != end(); ++itr)
+    for (auto itr = begin(), itr_end = end(); itr != itr_end; ++itr)
     {
       if (static_cast <bool>(*itr)) { return true; }
     }
@@ -282,7 +282,7 @@ namespace matsulib {
   template <class T> template <class Function>
   inline auto ValueArray <T>::all(Function &&function) const -> bool
   {
-    for (auto itr = begin(); itr != end(); ++itr)
+    for (auto itr = begin(), itr_end = end(); itr != itr_end; ++itr)
     {
       if (!static_cast <bool>(function(*itr))) { return false; }
     }
@@ -291,7 +291,7 @@ namespace matsulib {
   template <class T>
   inline auto ValueArray <T>::all() const -> bool
   {
-    for (auto itr = begin(); itr != end(); ++itr)
+    for (auto itr = begin(), itr_end = end(); itr != itr_end; ++itr)
     {
       if (!static_cast <bool>(*itr)) { return false; }
     }
