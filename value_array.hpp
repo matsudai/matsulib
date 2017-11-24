@@ -261,41 +261,25 @@ namespace matsulib {
   }
 
   template <class T> template <class Function>
-  inline auto ValueArray <T>::any(Function &&function) const -> bool
+  inline auto ValueArray <T>::any(Function && function) const -> bool
   {
-    for (auto itr = begin(), itr_end = end(); itr != itr_end; ++itr)
-    {
-      if (static_cast <bool>(function(*itr))) { return true; }
-    }
-    return false;
+    return std::any_of(this->begin(), this->end(), [&function](auto && v) { return static_cast <bool>(function(v)); });
   }
   template <class T>
   inline auto ValueArray <T>::any() const -> bool
   {
-    for (auto itr = begin(), itr_end = end(); itr != itr_end; ++itr)
-    {
-      if (static_cast <bool>(*itr)) { return true; }
-    }
-    return false;
+    return std::any_of(this->begin(), this->end(), [](auto && v) { return static_cast <bool>(v); });
   }
 
   template <class T> template <class Function>
-  inline auto ValueArray <T>::all(Function &&function) const -> bool
+  inline auto ValueArray <T>::all(Function && function) const -> bool
   {
-    for (auto itr = begin(), itr_end = end(); itr != itr_end; ++itr)
-    {
-      if (!static_cast <bool>(function(*itr))) { return false; }
-    }
-    return true;
+    return std::all_of(this->begin(), this->end(), [&function](auto && v) { return static_cast <bool>(function(v)); });;
   }
   template <class T>
   inline auto ValueArray <T>::all() const -> bool
   {
-    for (auto itr = begin(), itr_end = end(); itr != itr_end; ++itr)
-    {
-      if (!static_cast <bool>(*itr)) { return false; }
-    }
-    return true;
+    return std::all_of(this->begin(), this->end(), [](auto && v) { return static_cast <bool>(v); });
   }
 
   template <class T>
