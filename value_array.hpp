@@ -40,6 +40,13 @@ namespace matsulib {
     auto operator*=(const Type & value) -> ValueArray &;
     auto operator/=(const Type & value) -> ValueArray &;
     
+    auto operator<(const ValueArray & compared) const -> ValueArray <bool>;
+    auto operator>(const ValueArray & compared) const -> ValueArray <bool>;
+    auto operator==(const ValueArray & compared) const -> ValueArray <bool>;
+    auto operator!=(const ValueArray & compared) const -> ValueArray <bool>;
+    auto operator<=(const ValueArray & compared) const -> ValueArray <bool>;
+    auto operator>=(const ValueArray & compared) const -> ValueArray <bool>;
+
     auto operator<(const Type & compared) const -> ValueArray <bool>;
     auto operator>(const Type & compared) const -> ValueArray <bool>;
     auto operator==(const Type & compared) const -> ValueArray <bool>;
@@ -94,6 +101,8 @@ namespace matsulib {
     template <class UnaryOperation>
     auto zip_destructive(const Type & value, UnaryOperation && op) -> ValueArray &;
 
+    template <class BinaryOperation>
+    auto where(BinaryOperation && op) const -> ValueArray <bool>;
     template <class UnaryOperation>
     auto where(UnaryOperation && op) const -> ValueArray <bool>;
 
