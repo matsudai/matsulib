@@ -95,12 +95,12 @@ namespace matsulib {
     template <class BinaryOperation>
     auto zip(const ValueArray & values, BinaryOperation && op) const -> ValueArray;
     template <class UnaryOperation>
-    auto zip(const Type & value, UnaryOperation && op) const-> ValueArray;
+    auto zip(UnaryOperation && op) const-> ValueArray;
 
     template <class BinaryOperation>
     auto zip_destructive(const ValueArray & values, BinaryOperation && op) -> ValueArray &;
     template <class UnaryOperation>
-    auto zip_destructive(const Type & value, UnaryOperation && op) -> ValueArray &;
+    auto zip_destructive(UnaryOperation && op) -> ValueArray &;
 
     template <class BinaryOperation>
     auto where(const ValueArray & values, BinaryOperation && op) const -> ValueArray <bool>;
@@ -138,7 +138,7 @@ namespace matsulib {
     return std::move(output);
   }
   template <class T> template <class UnaryOperation>
-  inline auto ValueArray <T>::zip(const T & value, UnaryOperation &&op) const -> ValueArray
+  inline auto ValueArray <T>::zip(UnaryOperation &&op) const -> ValueArray
   {
     ValueArray output = *this;
     std::transform(this->begin(), this->end(), output.begin(), std::forward <UnaryOperation>(op));
@@ -152,7 +152,7 @@ namespace matsulib {
     return *this;
   }
   template <class T> template <class UnaryOperation>
-  inline auto ValueArray <T>::zip_destructive(const T &value, UnaryOperation &&op) -> ValueArray &
+  inline auto ValueArray <T>::zip_destructive(UnaryOperation &&op) -> ValueArray &
   {
     std::transform(this->begin(), this->end(), this->begin(), std::forward <UnaryOperation>(op));
     return *this;
@@ -186,19 +186,19 @@ namespace matsulib {
 
   template <class T> auto ValueArray <T>::operator+(const T & value) const -> ValueArray
   {
-    return std::move(zip(value, [&value](auto && value) {return std::move(value + value); }));
+    return std::move(zip([&value](auto && src_value) {return std::move(src_value + value); }));
   }
   template <class T> auto ValueArray <T>::operator-(const T & value) const -> ValueArray
   {
-    return std::move(zip(value, [&value](auto && value) {return std::move(value - value); }));
+    return std::move(zip([&value](auto && src_value) {return std::move(src_value - value); }));
   }
   template <class T> auto ValueArray <T>::operator*(const T & value) const -> ValueArray
   {
-    return std::move(zip(value, [&value](auto && value) {return std::move(value * value); }));
+    return std::move(zip([&value](auto && src_value) {return std::move(src_value * value); }));
   }
   template <class T> auto ValueArray <T>::operator/(const T & value) const -> ValueArray
   {
-    return std::move(zip(value, [&value](auto && value) {return std::move(value / value); }));
+    return std::move(zip([&value](auto && src_value) {return std::move(src_value / value); }));
   }
 
   template <class T> auto ValueArray <T>::operator+=(const ValueArray & values) -> ValueArray &
@@ -220,19 +220,19 @@ namespace matsulib {
 
   template <class T> auto ValueArray <T>::operator+=(const T & value) -> ValueArray &
   {
-    return zip_destructive(value, [&value](auto && value) {return std::move(value + value); });
+    return zip_destructive([&value](auto && value) {return std::move(value + value); });
   }
   template <class T> auto ValueArray <T>::operator-=(const T & value) -> ValueArray &
   {
-    return zip_destructive(value, [&value](auto && value) {return std::move(value - value); });
+    return zip_destructive([&value](auto && value) {return std::move(value - value); });
   }
   template <class T> auto ValueArray <T>::operator*=(const T & value) -> ValueArray &
   {
-    return zip_destructive(value, [&value](auto && value) {return std::move(value * value); });
+    return zip_destructive([&value](auto && value) {return std::move(value * value); });
   }
   template <class T> auto ValueArray <T>::operator/=(const T & value) -> ValueArray &
   {
-    return zip_destructive(value, [&value](auto && value) {return std::move(value / value); });
+    return zip_destructive([&value](auto && value) {return std::move(value / value); });
   }
 
   template <class T> auto ValueArray <T>::operator<(const T & compared) const -> ValueArray <bool>
