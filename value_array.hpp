@@ -102,7 +102,7 @@ namespace matsulib {
     auto zip_destructive(const Type & value, UnaryOperation && op) -> ValueArray &;
 
     template <class BinaryOperation>
-    auto where(BinaryOperation && op) const -> ValueArray <bool>;
+    auto where(const ValueArray & values, BinaryOperation && op) const -> ValueArray <bool>;
     template <class UnaryOperation>
     auto where(UnaryOperation && op) const -> ValueArray <bool>;
 
