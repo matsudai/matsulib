@@ -178,120 +178,120 @@ namespace matsulib {
     return std::move(selector);
   }
 
-  template <class T> auto ValueArray <T>::operator+(const ValueArray & values) const -> ValueArray
+  template <class T> inline auto ValueArray <T>::operator+(const ValueArray & values) const -> ValueArray
   {
     return std::move(zip(values, std::plus <T>{}));
   }
-  template <class T> auto ValueArray <T>::operator-(const ValueArray & values) const -> ValueArray
+  template <class T> inline auto ValueArray <T>::operator-(const ValueArray & values) const -> ValueArray
   {
     return std::move(zip(values, std::minus <T>{}));
   }
-  template <class T> auto ValueArray <T>::operator*(const ValueArray & values) const -> ValueArray
+  template <class T> inline auto ValueArray <T>::operator*(const ValueArray & values) const -> ValueArray
   {
     return std::move(zip(values, std::multiplies <T>{}));
   }
-  template <class T> auto ValueArray <T>::operator/(const ValueArray & values) const -> ValueArray
+  template <class T> inline auto ValueArray <T>::operator/(const ValueArray & values) const -> ValueArray
   {
     return std::move(zip(values, std::divides <T>{}));
   }
 
-  template <class T> auto ValueArray <T>::operator+(const T & value) const -> ValueArray
+  template <class T> inline auto ValueArray <T>::operator+(const T & value) const -> ValueArray
   {
     return std::move(zip([&value](auto && src_value) {return std::move(src_value + value); }));
   }
-  template <class T> auto ValueArray <T>::operator-(const T & value) const -> ValueArray
+  template <class T> inline auto ValueArray <T>::operator-(const T & value) const -> ValueArray
   {
     return std::move(zip([&value](auto && src_value) {return std::move(src_value - value); }));
   }
-  template <class T> auto ValueArray <T>::operator*(const T & value) const -> ValueArray
+  template <class T> inline auto ValueArray <T>::operator*(const T & value) const -> ValueArray
   {
     return std::move(zip([&value](auto && src_value) {return std::move(src_value * value); }));
   }
-  template <class T> auto ValueArray <T>::operator/(const T & value) const -> ValueArray
+  template <class T> inline auto ValueArray <T>::operator/(const T & value) const -> ValueArray
   {
     return std::move(zip([&value](auto && src_value) {return std::move(src_value / value); }));
   }
 
-  template <class T> auto ValueArray <T>::operator+=(const ValueArray & values) -> ValueArray &
+  template <class T> inline auto ValueArray <T>::operator+=(const ValueArray & values) -> ValueArray &
   {
     return zip_destructive(values, std::plus <T>{});
   }
-  template <class T> auto ValueArray <T>::operator-=(const ValueArray & values) -> ValueArray &
+  template <class T> inline auto ValueArray <T>::operator-=(const ValueArray & values) -> ValueArray &
   {
     return zip_destructive(values, std::minus <T>{});
   }
-  template <class T> auto ValueArray <T>::operator*=(const ValueArray & values) -> ValueArray &
+  template <class T> inline auto ValueArray <T>::operator*=(const ValueArray & values) -> ValueArray &
   {
     return zip_destructive(values, std::multiplies <T>{});
   }
-  template <class T> auto ValueArray <T>::operator/=(const ValueArray & values) -> ValueArray &
+  template <class T> inline auto ValueArray <T>::operator/=(const ValueArray & values) -> ValueArray &
   {
     return zip_destructive(values, std::divides <T>{});
   }
 
-  template <class T> auto ValueArray <T>::operator+=(const T & value) -> ValueArray &
+  template <class T> inline auto ValueArray <T>::operator+=(const T & value) -> ValueArray &
   {
     return zip_destructive([&value](auto && src_value) {return std::move(src_value + value); });
   }
-  template <class T> auto ValueArray <T>::operator-=(const T & value) -> ValueArray &
+  template <class T> inline auto ValueArray <T>::operator-=(const T & value) -> ValueArray &
   {
     return zip_destructive([&value](auto && src_value) {return std::move(src_value - value); });
   }
-  template <class T> auto ValueArray <T>::operator*=(const T & value) -> ValueArray &
+  template <class T> inline auto ValueArray <T>::operator*=(const T & value) -> ValueArray &
   {
     return zip_destructive([&value](auto && src_value) {return std::move(src_value * value); });
   }
-  template <class T> auto ValueArray <T>::operator/=(const T & value) -> ValueArray &
+  template <class T> inline auto ValueArray <T>::operator/=(const T & value) -> ValueArray &
   {
     return zip_destructive([&value](auto && src_value) {return std::move(src_value / value); });
   }
 
-  template <class T> auto ValueArray <T>::operator<(const ValueArray & compared) const -> ValueArray <bool>
+  template <class T> inline auto ValueArray <T>::operator<(const ValueArray & compared) const -> ValueArray <bool>
   {
     return where(compared, std::less <T>{});
   }
-  template <class T> auto ValueArray <T>::operator>(const ValueArray & compared) const -> ValueArray <bool>
+  template <class T> inline auto ValueArray <T>::operator>(const ValueArray & compared) const -> ValueArray <bool>
   {
     return where(compared, std::greater <T>{});
   }
-  template <class T> auto ValueArray <T>::operator==(const ValueArray & compared) const -> ValueArray <bool>
+  template <class T> inline auto ValueArray <T>::operator==(const ValueArray & compared) const -> ValueArray <bool>
   {
     return where(compared, std::equal_to <T>{});
   }
-  template <class T> auto ValueArray <T>::operator!=(const ValueArray & compared) const -> ValueArray <bool>
+  template <class T> inline auto ValueArray <T>::operator!=(const ValueArray & compared) const -> ValueArray <bool>
   {
     return where(compared, std::not_equal_to <T>{});
   }
-  template <class T> auto ValueArray <T>::operator<=(const ValueArray & compared) const -> ValueArray <bool>
+  template <class T> inline auto ValueArray <T>::operator<=(const ValueArray & compared) const -> ValueArray <bool>
   {
     return where(compared, std::less_equal <T>{});
   }
-  template <class T> auto ValueArray <T>::operator>=(const ValueArray & compared) const -> ValueArray <bool>
+  template <class T> inline auto ValueArray <T>::operator>=(const ValueArray & compared) const -> ValueArray <bool>
   {
     return where(compared, std::greater_equal <T>{});
   }
 
-  template <class T> auto ValueArray <T>::operator<(const T & compared) const -> ValueArray <bool>
+  template <class T> inline auto ValueArray <T>::operator<(const T & compared) const -> ValueArray <bool>
   {
     return where([&compared](auto && value) {return std::move(value < compared); });
   }
-  template <class T> auto ValueArray <T>::operator>(const T & compared) const -> ValueArray <bool>
+  template <class T> inline auto ValueArray <T>::operator>(const T & compared) const -> ValueArray <bool>
   {
     return where([&compared](auto && value) {return std::move(value > compared); });
   }
-  template <class T> auto ValueArray <T>::operator==(const T & compared) const -> ValueArray <bool>
+  template <class T> inline auto ValueArray <T>::operator==(const T & compared) const -> ValueArray <bool>
   {
     return where([&compared](auto && value) {return std::move(value == compared); });
   }
-  template <class T> auto ValueArray <T>::operator!=(const T & compared) const -> ValueArray <bool>
+  template <class T> inline auto ValueArray <T>::operator!=(const T & compared) const -> ValueArray <bool>
   {
     return where([&compared](auto && value) {return std::move(value != compared); });
   }
-  template <class T> auto ValueArray <T>::operator<=(const T & compared) const -> ValueArray <bool>
+  template <class T> inline auto ValueArray <T>::operator<=(const T & compared) const -> ValueArray <bool>
   {
     return where([&compared](auto && value) {return std::move(value <= compared); });
   }
-  template <class T> auto ValueArray <T>::operator>=(const T & compared) const -> ValueArray <bool>
+  template <class T> inline auto ValueArray <T>::operator>=(const T & compared) const -> ValueArray <bool>
   {
     return where([&compared](auto && value) {return std::move(value >= compared); });
   }
