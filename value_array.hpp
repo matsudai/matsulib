@@ -158,6 +158,17 @@ namespace matsulib {
     return *this;
   }
 
+  template <class T> template <class BinaryOperation>
+  inline auto ValueArray <T>::where(const ValueArray & values, BinaryOperation && op) const -> ValueArray <bool>
+  {
+    ValueArray <bool> selector;
+    selector.resize(size());
+    auto end_of_itr = end_of_zipped_iterator(values);
+    std::transform(begin(), end_of_itr, values.begin(), selector.begin(), std::forward <BinaryOperation>(op));
+    auto end_of_selector = selector.end();
+    std::fill(end_of_selector - (end() - end_of_itr), end_of_selector, false);
+    return std::move(selector);
+  }
   template <class T> template <class UnaryOperation>
   inline auto ValueArray <T>::where(UnaryOperation && op) const -> ValueArray <bool>
   {
@@ -233,6 +244,31 @@ namespace matsulib {
   template <class T> auto ValueArray <T>::operator/=(const T & value) -> ValueArray &
   {
     return zip_destructive([&value](auto && src_value) {return std::move(src_value / value); });
+  }
+
+  template <class T> auto ValueArray <T>::operator<(const ValueArray & compared) const -> ValueArray <bool>
+  {
+    return where(compared, std::less <T>{});
+  }
+  template <class T> auto ValueArray <T>::operator>(const ValueArray & compared) const -> ValueArray <bool>
+  {
+    return where(compared, std::greater <T>{});
+  }
+  template <class T> auto ValueArray <T>::operator==(const ValueArray & compared) const -> ValueArray <bool>
+  {
+    return where(compared, std::equal_to <T>{});
+  }
+  template <class T> auto ValueArray <T>::operator!=(const ValueArray & compared) const -> ValueArray <bool>
+  {
+    return where(compared, std::not_equal_to <T>{});
+  }
+  template <class T> auto ValueArray <T>::operator<=(const ValueArray & compared) const -> ValueArray <bool>
+  {
+    return where(compared, std::less_equal <T>{});
+  }
+  template <class T> auto ValueArray <T>::operator>=(const ValueArray & compared) const -> ValueArray <bool>
+  {
+    return where(compared, std::greater_equal <T>{});
   }
 
   template <class T> auto ValueArray <T>::operator<(const T & compared) const -> ValueArray <bool>
