@@ -68,7 +68,7 @@ namespace matsulib {
 
   public:
     using parent::operator[];
-    auto operator[](const ValueArray <bool> &filtered_map) -> Assigner;
+    auto operator[](const ValueArray <bool> & selector) -> Assigner;
 
     operator std::vector <Type>() const;
 
@@ -76,19 +76,19 @@ namespace matsulib {
     class Assigner
     {
     private:
-      ValueArray & _destination;
-      ValueArray <bool> & _filter;
+      ValueArray & _source;
+      std::vector <std::size_t> _selected_indexes;
     public:
-      Assigner(ValueArray & destination, ValueArray <bool> &filter)
-        : _destination{ destination }, _filter{ filter } {}
+      Assigner(ValueArray & source, const ValueArray <bool> & selector);
       Assigner() = delete;
       Assigner(const Assigner &) = delete;
-      Assigner(Assigner &&) = delete;
+      Assigner(Assigner &&) noexcept = default;
       Assigner &operator=(const Assigner &) = delete;
-      Assigner &operator=(Assigner &&) = delete;
+      Assigner &operator=(Assigner &&) noexcept = delete;
       virtual ~Assigner() = default;
-      auto operator=(ValueArray && source) -> ValueArray &;
-      auto operator=(const Type & source) -> ValueArray &;
+      auto operator=(ValueArray && values) && -> ValueArray &;
+      auto operator=(const Type & value) && -> ValueArray &;
+      auto to_value_array() const -> ValueArray;
       operator ValueArray() const;
     };
 
@@ -107,12 +107,14 @@ namespace matsulib {
     template <class UnaryOperation>
     auto where(UnaryOperation && op) const -> ValueArray <bool>;
 
-    auto end_of_zipped_iterator(const ValueArray &compared) -> iterator;
-    auto end_of_zipped_iterator(const ValueArray &compared) const -> const_iterator;
+    template <class Type2>
+    auto end_of_zipped_iterator(const ValueArray <Type2> &compared) -> iterator;
+    template <class Type2>
+    auto end_of_zipped_iterator(const ValueArray <Type2> &compared) const -> const_iterator;
   };
 
-  template <class T>
-  inline auto ValueArray <T>::end_of_zipped_iterator(const ValueArray &compared) -> iterator
+  template <class T> template <class T2>
+  inline auto ValueArray <T>::end_of_zipped_iterator(const ValueArray <T2> &compared) -> iterator
   {
     if (size() > compared.size())
     {
@@ -120,8 +122,8 @@ namespace matsulib {
     }
     return end();
   }
-  template <class T>
-  inline auto ValueArray <T>::end_of_zipped_iterator(const ValueArray &compared) const -> const_iterator
+  template <class T> template <class T2>
+  inline auto ValueArray <T>::end_of_zipped_iterator(const ValueArray <T2> &compared) const -> const_iterator
   {
     if (size() > compared.size())
     {
@@ -328,5 +330,54 @@ namespace matsulib {
       if ((*this)[i] != values[i]) { return false; }
     }
     return true;
+  }
+
+  template <class T>
+  inline auto ValueArray <T>::operator[](const ValueArray <bool> & selector) -> Assigner
+  {
+    return Assigner(*this, selector);
+  }
+
+  template <class T>
+  inline ValueArray <T>::Assigner::Assigner(ValueArray & destination, const ValueArray <bool> & selector) : _source{ destination }
+  {
+    _selected_indexes.resize(std::count(selector.begin(), selector.end(), true));
+    auto num_of_loop = selector.size();
+    auto size_of_source = _source.size();
+    for (std::size_t i = 0, j = 0; i < num_of_loop; ++i)
+    {
+      if (i >= size_of_source) { return; }
+      if (!selector[i]) { continue; }
+      _selected_indexes[j] = i; ++j;
+    }
+  }
+
+  template <class T>
+  inline auto ValueArray <T>::Assigner::operator=(const T & value) && -> ValueArray &
+  {
+    auto size_of_source = _source.size();
+    for (auto i : _selected_indexes)
+    {
+      _source[i] = value;
+    }
+    return _source;
+  }
+
+  template <class T>
+  inline auto ValueArray <T>::Assigner::to_value_array() const -> ValueArray
+  {
+    ValueArray selected_values;
+    selected_values.reserve(_selected_indexes.size());
+    for (auto i : _selected_indexes)
+    {
+      selected_values.push_back(_source[i]);
+    }
+    return std::move(selected_values);
+  }
+
+  template <class T>
+  inline ValueArray <T>::Assigner::operator ValueArray <T>() const
+  {
+    return std::move(to_value_array());
   }
 }
